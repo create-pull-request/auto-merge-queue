@@ -46,7 +46,6 @@ jobs:
     needs: createPullRequest2
     steps:
       - name: Enable Pull Request Automerge
-        if: steps.cpr.outputs.pull-request-operation == 'created'
         run: gh pr merge --squash --auto "${{ needs.createPullRequest2.outputs.pull-request-number }}"
         env:
           GH_TOKEN: ${{ secrets.PAT }}
