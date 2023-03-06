@@ -46,6 +46,6 @@ jobs:
     needs: createPullRequest2
     steps:
       - name: Enable Pull Request Automerge
-        run: gh pr merge --squash --auto "${{ needs.createPullRequest2.outputs.pull-request-number }}"
+        run: gh pr merge -R "${{ github.repository }}" --squash --auto "${{ needs.createPullRequest2.outputs.pull-request-number }}"
         env:
           GH_TOKEN: ${{ secrets.PAT }}
