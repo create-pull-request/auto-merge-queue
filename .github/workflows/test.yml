@@ -4,48 +4,48 @@ jobs:
   createPullRequest1:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Make changes to pull request
         run: date +%s > report1.txt
 
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.PAT }}
           branch: test1
 
       - name: Enable Pull Request Automerge
         if: steps.cpr.outputs.pull-request-operation == 'created'
-        uses: peter-evans/enable-pull-request-automerge@composite-gh
+        uses: peter-evans/enable-pull-request-automerge@v3
         with:
           token: ${{ secrets.PAT }}
           pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
           merge-method: squash
 
-  createPullRequest2:
-    runs-on: ubuntu-latest
-    outputs:
-      pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-    steps:
-      - uses: actions/checkout@v3
+  # createPullRequest2:
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Make changes to pull request
-        run: date +%s > report2.txt
+  #     - name: Make changes to pull request
+  #       run: date +%s > report2.txt
 
-      - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v4
-        with:
-          token: ${{ secrets.PAT }}
-          branch: test2
+  #     - name: Create Pull Request
+  #       id: cpr
+  #       uses: peter-evans/create-pull-request@v7
+  #       with:
+  #         token: ${{ secrets.PAT }}
+  #         branch: test2
 
-  automerge2:
-    runs-on: ubuntu-latest
-    needs: createPullRequest2
-    steps:
-      - name: Enable Pull Request Automerge
-        run: gh pr merge -R "${{ github.repository }}" --squash --auto "${{ needs.createPullRequest2.outputs.pull-request-number }}"
-        env:
-          GH_TOKEN: ${{ secrets.PAT }}
+  # automerge2:
+  #   runs-on: ubuntu-latest
+  #   needs: createPullRequest2
+  #   steps:
+  #     - name: Enable Pull Request Automerge
+  #       run: gh pr merge -R "${{ github.repository }}" --squash --auto "${{ needs.createPullRequest2.outputs.pull-request-number }}"
+  #       env:
+  #         GH_TOKEN: ${{ secrets.PAT }}
